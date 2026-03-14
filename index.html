@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#1e3c72">
+
+<title>Community Support Grant Portal</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+<div class="topbar">
+
+<img src="logo.png" class="logo">
+
+<div class="titleBox">
+
+<h1>Community Support Grant Portal</h1>
+
+<span class="badge">2026 Application</span>
+
+</div>
+
+</div>
+
+<div class="navbar">
+
+<a href="#home">Home</a>
+
+<a href="#apply">Apply</a>
+
+<a href="#eligibility">Eligibility</a>
+
+<a href="#contact">Contact</a>
+
+</div>
+
+
+<section id="home" class="section">
+
+<h2>About The Grant Program</h2>
+
+<p>
+
+The Community Support Grant Program provides financial assistance
+to individuals and families experiencing economic hardship.
+The program focuses on housing support, education,
+healthcare needs and small business growth.
+
+</p>
+
+<div class="cards">
+
+<div class="card">
+
+<h3>Financial Support</h3>
+
+<p>
+
+Qualified applicants may receive support
+for essential expenses.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Community Growth</h3>
+
+<p>
+
+Strengthening individuals helps build stronger communities.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>Transparent Review</h3>
+
+<p>
+
+Applications are reviewed fairly and professionally.
+
+</p>
+
+</div>
+
+</div>
+
+<section class="notice">
+
+<h3>Important Notice</h3>
+
+<p>Application Deadline: <b>December 30 2026</b></p>
+
+<p>Grant Amount: <b>$500 – $5,000</b></p>
+
+<p>Processing Time: <b>5 – 10 working days</b></p>
+
+</section>
+
+</section>
+
+
+<section id="apply" class="section">
+
+<h2>Grant Application</h2>
+
+<p class="sectionText">
+
+Complete the form carefully before submission.
+
+</p>
+
+<div class="steps">
+
+<div class="step active">
+
+1
+<p>Apply</p>
+
+</div>
+
+<div class="step">
+
+2
+<p>Review</p>
+
+</div>
+
+<div class="step">
+
+3
+<p>Approval</p>
+
+</div>
+
+<div class="step">
+
+4
+<p>Payment</p>
+
+</div>
+
+</div>
+
+
+<div class="counterBox">
+
+<h3>Available Grants Remaining</h3>
+
+<h1 id="grantCounter">247</h1>
+
+</div>
+
+
+<form id="grantForm">
+
+<div class="grid">
+
+<input id="name" type="text" placeholder="Full Name" required>
+
+<input id="address" type="text" placeholder="Full Home Address" required>
+
+<input id="age" type="number" placeholder="Age" required>
+
+<select id="marital" required>
+
+<option value="">Marital Status</option>
+<option>Single</option>
+<option>Married</option>
+
+</select>
+
+<input id="phone" type="tel" placeholder="Phone Number" required>
+
+<select id="gender" required>
+
+<option value="">Gender</option>
+<option>Male</option>
+<option>Female</option>
+
+</select>
+
+<select id="disability">
+
+<option value="">Disability</option>
+<option>No</option>
+<option>Yes</option>
+
+</select>
+
+<select id="housing" required>
+
+<option value="">Housing</option>
+<option>Own House</option>
+<option>Rent Apartment</option>
+
+</select>
+
+<select id="payment" required>
+
+<option value="">Payment Method</option>
+<option>Cash</option>
+<option>Check</option>
+
+</select>
+
+<input id="job" type="text" placeholder="Occupation">
+
+<input id="income" type="number" placeholder="Monthly Income">
+
+<textarea id="purpose" placeholder="Purpose Of Applying"></textarea>
+
+</div>
+
+<button type="submit">
+
+Submit Application
+
+</button>
+
+</form>
+
+
+<div class="modal" id="successModal">
+
+<div class="modalBox">
+
+<h2>Application Submitted</h2>
+
+<p id="appID"></p>
+
+<button onclick="closeModal()">
+
+OK
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section id="eligibility" class="section">
+
+<h2>Eligibility Requirements</h2>
+
+<ul class="eligibilityList">
+
+<li>Must be 18 years or older</li>
+
+<li>Must provide valid contact details</li>
+
+<li>Must demonstrate financial need</li>
+
+<li>Information must be truthful</li>
+
+<li>One application per applicant</li>
+
+<li>Applications subject to verification</li>
+
+</ul>
+
+<section class="section">
+
+<h2>Frequently Asked Questions</h2>
+
+<div class="faq">
+
+<div class="faqItem">
+
+<h4 onclick="toggleFAQ(this)">
+
+Who can apply?
+
+</h4>
+
+<p>
+
+Anyone meeting the eligibility requirements.
+
+</p>
+
+</div>
+
+<div class="faqItem">
+
+<h4 onclick="toggleFAQ(this)">
+
+How long does review take?
+
+</h4>
+
+<p>
+
+Usually between 5 and 10 working days.
+
+</p>
+
+</div>
+
+<div class="faqItem">
+
+<h4 onclick="toggleFAQ(this)">
+
+How is payment sent?
+
+</h4>
+
+<p>
+
+Using the selected payment method.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+</section>
+
+
+<section class="section">
+
+<h2>Applicant Testimonials</h2>
+
+<div class="cards">
+
+<div class="card">
+
+<p>
+
+This grant helped my family greatly.
+
+</p>
+
+<b>— Michael A</b>
+
+</div>
+
+<div class="card">
+
+<p>
+
+Very smooth and professional process.
+
+</p>
+
+<b>— Sarah K</b>
+
+</div>
+
+<div class="card">
+
+<p>
+
+I appreciate the transparency.
+
+</p>
+
+<b>— David O</b>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section id="contact" class="section">
+
+<h2>Contact Information</h2>
+
+<div class="contactBox">
+
+<p>Email: support@communitygrant.org</p>
+
+<p>Phone: +1 000 000 000</p>
+
+<p>Office Hours:
+Mon – Fri (9am – 5pm)</p>
+
+</div>
+
+</section>
+
+</div>
+
+
+<div class="footer">
+
+© 2026 Community Support Grant Program
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
