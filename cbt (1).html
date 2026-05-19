@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSC 102 CBT Practice Exam</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <style>
+        /* Custom responsive adjustments tailored for mobile views */
+        @media (max-width: 414px) {
+            .quiz-container {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            #matrix-grid {
+                grid-template-cols: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        /* Custom scrollbar adjustments for the question grid matrix layout */
+        #matrix-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        #matrix-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        #matrix-grid::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        #matrix-grid::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased min-h-screen">
+
+    <header class="bg-blue-700 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div>
+                <h1 class="text-xl font-bold tracking-tight">CSC 102: Algorithm Techniques</h1>
+                <p class="text-xs text-blue-200">Introduction to Algorithm Techniques — CBT Practice</p>
+            </div>
+            <div class="flex items-center gap-4 bg-blue-800 px-3 py-1.5 rounded-lg text-sm font-semibold">
+                <div id="progress-tracker">Question: <span id="current-idx">1</span>/40</div>
+                <div class="h-4 w-px bg-blue-600"></div>
+                <div id="timer-display" class="text-yellow-300">Time: 40:00</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-6 quiz-container">
+        
+        <div id="welcome-screen" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center max-w-md mx-auto my-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Ready to Start?</h2>
+            <p class="text-sm text-gray-600 mb-6">This practice test contains 40 questions covering Modules 1 to 5. You have 40 minutes to complete it.</p>
+            <button id="start-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors cursor-pointer shadow-sm">
+                Start Examination
+            </button>
+        </div>
+
+        <div id="quiz-screen" class="hidden grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+            
+            <div class="md:col-span-3 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <span id="question-category" class="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-md mb-4 uppercase tracking-wider">
+                    Module Loading...
+                </span>
+                
+                <div class="mb-6">
+                    <h3 id="question-text" class="text-lg font-medium text-gray-900 leading-relaxed">
+                        Loading question text...
+                    </h3>
+                </div>
+
+                <form id="options-form" class="space-y-3">
+                    </form>
+
+                <div class="flex justify-between items-center pt-6 mt-6 border-t border-gray-100">
+                    <button id="prev-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-sm">
+                        Previous
+                    </button>
+                    <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg transition-colors cursor-pointer text-sm">
+                        Next
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Question Grid</h4>
+                <div id="matrix-grid" class="grid grid-cols-5 gap-2 max-h-64 overflow-y-auto pr-1">
+                    </div>
+                <div class="mt-4 pt-4 border-t border-gray-100">
+                    <button id="submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors cursor-pointer text-sm shadow-sm">
+                        Submit Exam
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="results-screen" class="hidden space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center max-w-md mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-1">Examination Completed</h2>
+                <p class="text-sm text-gray-500 mb-4">Your performance summary code results:</p>
+                <div class="text-5xl font-black text-blue-600 my-4" id="score-display">0 / 40</div>
+                <p class="text-base font-semibold text-gray-700 mb-6" id="percentage-display">0%</p>
+                <button id="retry-btn" class="bg-gray-900 hover:bg-black text-white font-medium py-2 px-6 rounded-lg transition-colors cursor-pointer text-sm">
+                    Retake Practice Test
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Review Corrections & Explanations</h3>
+                <div id="review-list" class="space-y-8 divide-y divide-gray-100">
+                    </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const questionsData = [
+            {
+                id: 1,
+                category: "MODULE 1: Problem Solving Strategies",
+                question: "According to the course material, a problem in computing is defined as an objective to be attained by:",
+                options: {
+                    A: "Writing a program directly without planning",
+                    B: "An explicit sequence of steps/activities using a specific input",
+                    C: "Using hardware components to bypass software bugs",
+                    D: "Guessing code structures until the compiler accepts it"
+                },
+                correct: "B",
+                explanation: "Module 1 defines a problem explicitly as an objective reached through an explicit, ordered sequence of steps using specific inputs."
+            },
+            {
+                id: 2,
+                category: "MODULE 1: Problem Solving Strategies",
+                question: "Which of the following correctly lists the 5 problem-solving stages in their exact chronological order?",
+                options: {
+                    A: "Program Design → Testing → Algorithm Design → Problem Definition → Documentation",
+                    B: "Problem Definition → Program Design → Testing → Algorithm Design → Documentation",
+                    C: "Problem Definition → Algorithm Design → Program Design → Program Testing → Program Documentation",
+                    D: "Algorithm Design → Problem Definition → Program Testing → Program Design → Program Documentation"
+                },
+                correct: "C",
+                explanation: "The exact sequence stated throughout the text is: Definition → Algorithm Design → Program Design → Program Testing → Program Documentation."
+            },
+            {
+                id: 3,
+                category: "MODULE 1: Problem Solving Strategies",
+                question: "During which stage of problem-solving do you identify the required outputs, available inputs, and necessary arithmetic or logical operations?",
+                options: {
+                    A: "Program Design",
+                    B: "Problem Definition",
+                    C: "Program Testing",
+                    D: "Algorithm Design"
+                },
+                correct: "B",
+                explanation: "Identification of tracking outputs, inputs, and formulas occurs explicitly during the Problem Definition phase."
+            },
+            {
+                id: 4,
+                category: "MODULE 1: Problem Solving Strategies",
+                question: "What is the primary purpose of entering test data with known results into a program during the 'Program Testing' stage?",
+                options: {
+                    A: "To write the user manual",
+                    B: "To detect, debug, and eliminate logical or syntax errors",
+                    C: "To define what the problem is about",
+                    D: "To change the program's requirements"
+                },
+                correct: "B",
+                explanation: "Program Testing relies on input sets with known targets to flag syntax, logic, and runtime errors (debugging)."
+            },
+            {
+                id: 5,
+                category: "MODULE 1: Problem Solving Strategies",
+                question: "Why is 'Program Documentation' emphasized as a crucial final stage in the problem-solving lifecycle?",
+                options: {
+                    A: "It makes the program run faster in the CPU",
+                    B: "It ensures clear notation so that other programmers can easily understand, modify, or co-write the code",
+                    C: "It deletes unused variables automatically",
+                    D: "It replaces the need for a compiler"
+                },
+                correct: "B",
+                explanation: "Documentation acts as a legacy tool ensuring other engineering teammates can interpret, refactor, or co-develop software systems seamlessly."
+            },
+            {
+                id: 6,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "Which property of an algorithm states that it must terminate after a finite number of steps?",
+                options: {
+                    A: "Definiteness",
+                    B: "Effectiveness",
+                    C: "Finiteness",
+                    D: "Generality"
+                },
+                correct: "C",
+                explanation: "Finiteness states that an algorithm must hit an end boundary and terminate after processing finite steps."
+            },
+            {
+                id: 7,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "If an algorithm is clear, precise, and leaves no room for ambiguity or multiple interpretations, it satisfies which property?",
+                options: {
+                    A: "Input",
+                    B: "Definiteness",
+                    C: "Generality",
+                    D: "Output"
+                },
+                correct: "B",
+                explanation: "Definiteness ensures steps are completely unambiguous and crystal clear."
+            },
+            {
+                id: 8,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "The property 'Generality' implies that an algorithm must:",
+                options: {
+                    A: "Be written only in English",
+                    B: "Solve only one specific case with fixed numbers",
+                    C: "Be capable of handling all valid instances of the defined problem",
+                    D: "Execute in less than one second"
+                },
+                correct: "C",
+                explanation: "Generality demands that the core logic must stay sound across all valid variable instances of a problem, not just hardcoded examples."
+            },
+            {
+                id: 9,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "In standard flowcharting notation, a Parallelogram shape is explicitly used to represent:",
+                options: {
+                    A: "Processing calculations",
+                    B: "Decision making/Testing conditions",
+                    C: "Input and Output operations",
+                    D: "Start and Stop terminals"
+                },
+                correct: "C",
+                explanation: "Parallelograms handle Input/Output functions."
+            },
+            {
+                id: 10,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "Which ANSI standard flowchart symbol is a Diamond?",
+                options: {
+                    A: "Process block",
+                    B: "Connector",
+                    C: "Terminal block",
+                    D: "Decision block"
+                },
+                correct: "D",
+                explanation: "The Diamond symbol always signifies conditional choices or branch testing (Decision blocks)."
+            },
+            {
+                id: 11,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "What is a strict rule regarding the exit paths of a Decision (Diamond) symbol in a flowchart?",
+                options: {
+                    A: "It can have as many exit paths as there are variables",
+                    B: "It must feature exactly one entry path and exactly two exit paths (Yes/No or True/False)",
+                    C: "It cannot have any exit paths",
+                    D: "It must connect directly to another decision block without a process"
+                },
+                correct: "B",
+                explanation: "A decision block accepts 1 flow incoming, but splits exactly into 2 distinct alternative routes (Yes/No)."
+            },
+            {
+                id: 12,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "What shape is used as an off-page connector when a flowchart spans across multiple pages?",
+                options: {
+                    A: "A perfect circle",
+                    B: "A rectangle",
+                    C: "A pentagonal shape",
+                    D: "An oval"
+                },
+                correct: "C",
+                explanation: "On-page connections use simple circles; off-page multi-page splits use pentagonal shapes."
+            },
+            {
+                id: 13,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "In your course's pseudocode standard, which action keyword is explicitly used to modify or assign a value to a memory location/variable?",
+                options: {
+                    A: "GET",
+                    B: "PUT",
+                    C: "SET",
+                    D: "DISPLAY"
+                },
+                correct: "C",
+                explanation: "The explicit action keyword to set memory changes or value tracking in your notes is SET."
+            },
+            {
+                id: 14,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "Consider the following pseudocode snippet:\nSET A = 12\nSET B = 5\nIF (A > B) THEN\n    SET C = A - B\nELSE\n    SET C = B - A\nENDIF\nPRINT C\nWhat is the exact output printed?",
+                options: {
+                    A: "-7",
+                    B: "7",
+                    C: "17",
+                    D: "0"
+                },
+                correct: "B",
+                explanation: "Since 12 > 5 evaluates to True, the code executes the THEN block: C = 12 - 5 = 7."
+            },
+            {
+                id: 15,
+                category: "MODULE 2 & 3: Algorithms, Flowcharts, and Pseudocode",
+                question: "What is the algorithmic complexity 'Worst Case' analysis primarily concerned with?",
+                options: {
+                    A: "The absolute minimum running time for an optimal input",
+                    B: "The average performance across all possible inputs",
+                    C: "The absolute upper bound on execution time, identifying conditions driving maximum operations",
+                    D: "Running code on a slow computer"
+                },
+                correct: "C",
+                explanation: "Worst Case analysis defines structural upper performance limits, mapping conditions where a program performs maximum operations."
+            },
+            {
+                id: 16,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "Which of the following is a VALID variable identifier name according to C language syntax rules?",
+                options: {
+                    A: "2nd_num",
+                    B: "total$sum",
+                    C: "_studentScore",
+                    D: "int"
+                },
+                correct: "C",
+                explanation: "In C, identifiers can start with letters or underscores (_). They cannot start with numbers, contain special symbols, or copy compiler keywords."
+            },
+            {
+                id: 17,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "Why is 'float' an invalid name for a user-defined variable in C?",
+                options: {
+                    A: "It contains more than three characters",
+                    B: "It is a reserved compiler keyword used for data type definitions",
+                    C: "It starts with a lowercase letter",
+                    D: "It can only be used in flowcharts, not code"
+                },
+                correct: "B",
+                explanation: "'float' is an untouchable reserved data type keyword in standard C syntax."
+            },
+            {
+                id: 18,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "Evaluate the following C expression according to operator precedence rules: result = 5 + 3 * 4 - 2;",
+                options: {
+                    A: "30",
+                    B: "15",
+                    C: "11",
+                    D: "25"
+                },
+                correct: "B",
+                explanation: "Multiplication (*) takes precedence over addition and subtraction. Thus: 3 * 4 = 12. Then, 5 + 12 - 2 = 15."
+            },
+            {
+                id: 19,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "What is the value of the integer variable rem after executing the expression: int rem = 17 % 5;?",
+                options: {
+                    A: "3",
+                    B: "2",
+                    C: "0.4",
+                    D: "1"
+                },
+                correct: "B",
+                explanation: "The modulus operator (%) extracts integer remainders. 17 divided by 5 is 3 remainder 2."
+            },
+            {
+                id: 20,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "In C, which operator represents the logical 'AND' operation?",
+                options: {
+                    A: "||",
+                    B: "&",
+                    C: "&&",
+                    D: "!"
+                },
+                correct: "C",
+                explanation: "Double ampersand (&&) is the logical AND symbol in C."
+            },
+            {
+                id: 21,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "What header file must be included at the top of a C program to use standard input/output functions like printf() and scanf()?",
+                options: {
+                    A: "<conio.h>",
+                    B: "<math.h>",
+                    C: "<stdio.h>",
+                    D: "<string.h>"
+                },
+                correct: "C",
+                explanation: "<stdio.h> stands for Standard Input Output Header file, containing definitions for printf and scanf."
+            },
+            {
+                id: 22,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "Examine this C code segment:\nint x = 10;\nif (x > 15)\n    printf(\"Alpha \");\nelse if (x == 10)\n    printf(\"Beta \");\nelse\n    printf(\"Gamma \");\nWhat will be printed to the screen?",
+                options: {
+                    A: "Alpha",
+                    B: "Beta",
+                    C: "Gamma",
+                    D: "Alpha Beta"
+                },
+                correct: "B",
+                explanation: "x = 10. The first test (10 > 15) fails. The else if (x == 10) test passes, printing 'Beta '. The rest is skipped."
+            },
+            {
+                id: 23,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "What happens if you omit the break; statement at the end of a case block inside a C switch statement?",
+                options: {
+                    A: "The compiler will throw a fatal syntax error",
+                    B: "The program execution will fall through into the subsequent case statement",
+                    C: "The program terminates immediately",
+                    D: "The loop runs infinitely"
+                },
+                correct: "B",
+                explanation: "Without explicit break; checkpoints, code logic suffers from 'fall-through,' cascading into downstream case blocks automatically."
+            },
+            {
+                id: 24,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "Given the following C code:\nint i;\nfor(i = 0; i < 5; i++) {\n    if(i == 3) {\n        break;\n    }\n    printf(\"%d \", i);\n}\nWhat is the correct output?",
+                options: {
+                    A: "0 1 2 ",
+                    B: "0 1 2 3 4 ",
+                    C: "0 1 2 4 ",
+                    D: "3 "
+                },
+                correct: "A",
+                explanation: "The loop prints when i is 0, 1, and 2. When i reaches 3, the break; statement triggers, immediately breaking out of the loop."
+            },
+            {
+                id: 25,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "How many times will the following while loop execute its body?\nint count = 5;\nwhile (count > 0) {\n    count--;\n}",
+                options: {
+                    A: "0 times",
+                    B: "4 times",
+                    C: "5 times",
+                    D: "Infinitely"
+                },
+                correct: "C",
+                explanation: "The variable count starts at 5 and decrements down to 0 (5, 4, 3, 2, 1), completing exactly 5 runs before failing the condition 0 > 0."
+            },
+            {
+                id: 26,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "What distinguishes a do-while loop from a standard while loop in C?",
+                options: {
+                    A: "It can only evaluate character data types",
+                    B: "It checks the condition at the top before execution",
+                    C: "It guarantees that the loop body executes at least once because the condition is evaluated at the bottom",
+                    D: "It does not require any terminating semicolon"
+                },
+                correct: "C",
+                explanation: "A do-while loop executes its body first before testing the conditional check at the bottom, guaranteeing at least one execution path."
+            },
+            {
+                id: 27,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "What is the output of the following loop?\nint k = 1;\ndo {\n    printf(\"%d \", k);\n    k += 2;\n} while(k <= 5);",
+                options: {
+                    A: "1 2 3 4 5 ",
+                    B: "1 3 5 ",
+                    C: "3 5 ",
+                    D: "1 3 "
+                },
+                correct: "B",
+                explanation: "Loop steps: prints 1 (k becomes 3); prints 3 (k becomes 5); prints 5 (k becomes 7). 7 fails the condition, terminating the block. Output is 1 3 5."
+            },
+            {
+                id: 28,
+                category: "MODULE 4: Introduction to C Language (Part 1)",
+                question: "What is the value of count after this nested loop finishes executing?\nint count = 0;\nfor(int i = 0; i < 3; i++) {\n    for(int j = 0; j < 2; j++) {\n        count++;\n    }\n}",
+                options: {
+                    A: "5",
+                    B: "6",
+                    C: "9",
+                    D: "2"
+                },
+                correct: "B",
+                explanation: "The outer loop runs 3 times (0, 1, 2). For each outer run, the inner loop runs 2 times (0, 1). Total increment cycles = 3 * 2 = 6."
+            },
+            {
+                id: 29,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "An array declaration in C is written as: int scores[10];. What is the index number of the very first element and the last element respectively?",
+                options: {
+                    A: "1 and 10",
+                    B: "0 and 10",
+                    C: "0 and 9",
+                    D: "1 and 9"
+                },
+                correct: "C",
+                explanation: "Zero-indexing means an array of size 10 ranges from structural index positions 0 through 9."
+            },
+            {
+                id: 30,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "What will be the value stored in val after this operation?\nint dynamic[4] = {10, 20, 30, 40};\nint val = dynamic[2];",
+                options: {
+                    A: "10",
+                    B: "20",
+                    C: "30",
+                    D: "40"
+                },
+                correct: "C",
+                explanation: "dynamic[0] is 10, dynamic[1] is 20, and dynamic[2] is 30."
+            },
+            {
+                id: 31,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "In C programming, strings are fundamentally treated as:",
+                options: {
+                    A: "A primitive built-in data type like an integer",
+                    B: "A specialized class object",
+                    C: "A one-dimensional array of characters terminated by a null character (\\0)",
+                    D: "A pointer that cannot be modified"
+                },
+                correct: "C",
+                explanation: "Strings in C are structurally implemented as flat arrays of character types terminated by a trailing \\0 null marker."
+            },
+            {
+                id: 32,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "What special character automatically marks the exact end of a valid string in C memory storage?",
+                options: {
+                    A: "\\n",
+                    B: "\\t",
+                    C: "\\0",
+                    D: "EOF"
+                },
+                correct: "C",
+                explanation: "\\0 represents the terminal null byte indicating text string boundaries."
+            },
+            {
+                id: 33,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "Which standard library function from <string.h> is used to combine or concatenate two strings together?",
+                options: {
+                    A: "strlen()",
+                    B: "strcpy()",
+                    C: "strcmp()",
+                    D: "strcat()"
+                },
+                correct: "D",
+                explanation: "strcat stands for string concatenation."
+            },
+            {
+                id: 34,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "If you use strcmp(str1, str2) and it returns an integer value of 0, this explicitly indicates that:",
+                options: {
+                    A: "Both strings are completely empty",
+                    B: "str1 has fewer characters than str2",
+                    C: "The two strings are perfectly identical/equal",
+                    D: "An execution error occurred"
+                },
+                correct: "C",
+                explanation: "strcmp returns 0 when the lexicographical evaluation matches exactly, proving string equality."
+            },
+            {
+                id: 35,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "In C, what user-defined data type mechanism allows you to group variables of completely different data types under a single, unified name?",
+                options: {
+                    A: "Array",
+                    B: "Structure (struct)",
+                    C: "Function",
+                    D: "Pointer"
+                },
+                correct: "B",
+                explanation: "Structures (struct) group heterogeneous (different) data elements under an explicitly declared composite name."
+            },
+            {
+                id: 36,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "Examine the following structural definition:\nstruct Student {\n    int matricNo;\n    float gpa;\n};\nstruct Student s1;\nWhich operator is used to access or assign a value to the gpa field inside variable s1?",
+                options: {
+                    A: "The Arrow operator (->)",
+                    B: "The Dot operator (.)",
+                    C: "The Ampersand operator (&)",
+                    D: "The Asterisk operator (*)"
+                },
+                correct: "B",
+                explanation: "Regular structures utilize the simple Dot operator (.) to map internally declared attributes."
+            },
+            {
+                id: 37,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "What is the primary purpose of a function prototype declaration placed above the main() function in a C file?",
+                options: {
+                    A: "To execute code before the program officially starts",
+                    B: "To inform the C compiler about the function’s name, return type, and expected parameter list format",
+                    C: "To allocate memory dynamically inside the heap",
+                    D: "To link external libraries automatically"
+                },
+                correct: "B",
+                explanation: "A prototype function signature warns the compiler ahead of time about incoming parameters and return shapes."
+            },
+            {
+                id: 38,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "What is the return type of a function that performs internal computations or print actions but returns no value to the calling context?",
+                options: {
+                    A: "int",
+                    B: "char",
+                    C: "void",
+                    D: "null"
+                },
+                correct: "C",
+                explanation: "The void keyword declares an empty return space, signaling no value is sent back."
+            },
+            {
+                id: 39,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "In a Linear Search algorithm traversing an array of N items, what is the best-case number of comparison operations required to locate a target value?",
+                options: {
+                    A: "N operations",
+                    B: "N / 2 operations",
+                    C: "1 operation",
+                    D: "0 operations"
+                },
+                correct: "C",
+                explanation: "Best case for Linear Search occurs when your target asset resides at structural index position 0, necessitating precisely 1 check."
+            },
+            {
+                id: 40,
+                category: "MODULE 5: Functions, Arrays, Strings, and Structures",
+                question: "What sorting strategy step-by-step builds up a sorted array profile by consistently picking the smallest (or largest) remaining structural element from an unsorted collection and moving it to its proper index position?",
+                options: {
+                    A: "Bubble Sort",
+                    B: "Selection Sort",
+                    C: "Binary Insertion",
+                    D: "Quick Sort"
+                },
+                correct: "B",
+                explanation: "Selection sort functions by continually sweeping for the minimum structural item from the unsorted segment and shifting it to its final resting index."
+            }
+        ];
+
+        // Global State Variables
+        let currentIdx = 0;
+        let userSelections = new Array(questionsData.length).fill(null);
+        let durationSeconds = 40 * 60; 
+        let countdownTicker = null;
+
+        // Element Selectors
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+
+        const startBtn = document.getElementById('start-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const retryBtn = document.getElementById('retry-btn');
+
+        const questionCategory = document.getElementById('question-category');
+        const questionText = document.getElementById('question-text');
+        const optionsForm = document.getElementById('options-form');
+        const currentIdxDisplay = document.getElementById('current-idx');
+        const timerDisplay = document.getElementById('timer-display');
+        const matrixGrid = document.getElementById('matrix-grid');
+
+        const scoreDisplay = document.getElementById('score-display');
+        const percentageDisplay = document.getElementById('percentage-display');
+        const reviewList = document.getElementById('review-list');
+
+        // Event Listeners
+        startBtn.addEventListener('click', launchExamSession);
+        prevBtn.addEventListener('click', () => changeQuestion(currentIdx - 1));
+        nextBtn.addEventListener('click', () => changeQuestion(currentIdx + 1));
+        submitBtn.addEventListener('click', () => { if(confirm("Are you sure you want to finish and submit your exam?")) processExamTermination(); });
+        retryBtn.addEventListener('click', () => window.location.reload());
+
+        function launchExamSession() {
+            welcomeScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            renderMatrixGrid();
+            displayActiveQuestion();
+            initiateTimer();
+        }
+
+        function initiateTimer() {
+            countdownTicker = setInterval(() => {
+                if (durationSeconds <= 0) {
+                    clearInterval(countdownTicker);
+                    alert("Time is up! Your exam will be submitted automatically.");
+                    processExamTermination();
+                    return;
+                }
+                durationSeconds--;
+                let mins = Math.floor(durationSeconds / 60);
+                let secs = durationSeconds % 60;
+                timerDisplay.textContent = `Time: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function renderMatrixGrid() {
+            matrixGrid.innerHTML = '';
+            questionsData.forEach((q, index) => {
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.id = `matrix-cell-${index}`;
+                item.className = `p-2 text-xs font-bold rounded-lg border text-center transition-all cursor-pointer ${
+                    userSelections[index] !== null 
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-xs' 
+                    : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+                }`;
+                item.textContent = index + 1;
+                item.addEventListener('click', () => changeQuestion(index));
+                matrixGrid.appendChild(item);
+            });
+            markActiveMatrixCell();
+        }
+
+        function markActiveMatrixCell() {
+            questionsData.forEach((_, index) => {
+                const cell = document.getElementById(`matrix-cell-${index}`);
+                if (cell) {
+                    cell.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500');
+                    if (index === currentIdx) {
+                        cell.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
+                    }
+                }
+            });
+        }
+
+        function displayActiveQuestion() {
+            const activeQ = questionsData[currentIdx];
+            currentIdxDisplay.textContent = currentIdx + 1;
+            questionCategory.textContent = activeQ.category;
+            questionText.textContent = activeQ.question;
+            
+            if(activeQ.question.includes('\n')) {
+                questionText.innerHTML = activeQ.question.replace(/\n/g, '<br>');
+            }
+
+            optionsForm.innerHTML = '';
+            Object.entries(activeQ.options).forEach(([key, value]) => {
+                const wrapper = document.createElement('label');
+                const isSelected = userSelections[currentIdx] === key;
+                
+                wrapper.className = `flex items-center gap-3 p-3.5 rounded-xl border transition-all cursor-pointer ${
+                    isSelected 
+                    ? 'bg-blue-50/70 border-blue-500 text-blue-950 font-medium' 
+                    : 'bg-white border-gray-200 hover:bg-gray-50/50 text-gray-700'
+                }`;
+                
+                wrapper.innerHTML = `
+                    <input type="radio" name="cbt-option" value="${key}" ${isSelected ? 'checked' : ''} class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                    <span class="text-sm leading-tight"><strong class="mr-1">${key}.</strong> ${value}</span>
+                `;
+                
+                const radioInput = wrapper.querySelector('input');
+                radioInput.addEventListener('change', () => registerUserChoice(key));
+                optionsForm.appendChild(wrapper);
+            });
+
+            prevBtn.disabled = currentIdx === 0;
+            if (currentIdx === questionsData.length - 1) {
+                nextBtn.textContent = "Finish Exam";
+                nextBtn.classList.replace('bg-blue-600', 'bg-green-600');
+                nextBtn.classList.replace('hover:bg-blue-700', 'hover:bg-green-700');
+            } else {
+                nextBtn.textContent = "Next";
+                nextBtn.classList.replace('bg-green-600', 'bg-blue-600');
+                nextBtn.classList.replace('hover:bg-green-700', 'hover:bg-blue-700');
+            }
+            markActiveMatrixCell();
+        }
+
+        function registerUserChoice(selectedKey) {
+            userSelections[currentIdx] = selectedKey;
+            displayActiveQuestion();
+            const cell = document.getElementById(`matrix-cell-${currentIdx}`);
+            if(cell) {
+                cell.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+                cell.classList.add('bg-blue-600', 'text-white', 'border-blue-600', 'shadow-xs');
+            }
+        }
+
+        function changeQuestion(targetIdx) {
+            if (targetIdx >= 0 && targetIdx < questionsData.length) {
+                currentIdx = targetIdx;
+                displayActiveQuestion();
+            } else if (targetIdx === questionsData.length) {
+                if(confirm("You have reached the end of the test. Submit now?")) {
+                    processExamTermination();
+                }
+            }
+        }
+
+        function processExamTermination() {
+            clearInterval(countdownTicker);
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            timerDisplay.textContent = "Submitted";
+            
+            let correctlyAnswered = 0;
+            reviewList.innerHTML = '';
+
+            questionsData.forEach((q, index) => {
+                const userAns = userSelections[index];
+                const isCorrect = userAns === q.correct;
+                if(isCorrect) correctlyAnswered++;
+
+                const card = document.createElement('div');
+                card.className = `pt-6 ${index > 0 ? 'mt-6' : ''}`;
+                card.innerHTML = `
+                    <div class="flex items-start gap-2.5 mb-2">
+                        <span class="text-xs font-bold text-gray-400 mt-1">Q${q.id}</span>
+                        <h4 class="text-base font-semibold text-gray-900">${q.question.replace(/\n/g, '<br>')}</h4>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 my-3 pl-7">
+                        <div class="text-sm p-2 rounded-lg border ${isCorrect ? 'bg-green-50 border-green-200 text-green-900' : 'bg-red-50 border-red-200 text-red-900'}">
+                            <strong>Your Answer:</strong> ${userAns ? `${userAns}. ${q.options[userAns]}` : '<span class="italic text-gray-400">Unanswered</span>'}
+                        </div>
+                        ${!isCorrect ? `
+                        <div class="text-sm p-2 rounded-lg border bg-green-50 border-green-200 text-green-900">
+                            <strong>Correct Answer:</strong> ${q.correct}. ${q.options[q.correct]}
+                        </div>` : ''}
+                    </div>
+                    <p class="text-xs text-gray-600 bg-gray-50 border border-gray-100 rounded-lg p-3 pl-4 border-l-4 border-l-blue-500 ml-7">
+                        <strong>Explanation:</strong> ${q.explanation}
+                    </p>
+                `;
+                reviewList.appendChild(card);
+            });
+
+            scoreDisplay.textContent = `${correctlyAnswered} / ${questionsData.length}`;
+            const percent = Math.round((correctlyAnswered / questionsData.length) * 100);
+            percentageDisplay.textContent = `${percent}%`;
+            if(percent >= 50) {
+                percentageDisplay.className = "text-xl font-bold text-green-600";
+            } else {
+                percentageDisplay.className = "text-xl font-bold text-red-600";
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
